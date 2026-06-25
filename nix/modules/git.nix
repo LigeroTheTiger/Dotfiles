@@ -11,6 +11,13 @@
       gpg.format = "ssh";
       init.defaultBranch = "main";
     };
+    # Keeping my wok stuff private
+    includes = [
+      {
+        condition = "gitdir:~/Desktop/Projects/business/**";
+        path = "~/.config/.gitconfig-business";
+      }
+    ];
     signing = {
       key = "/Users/ligero/.ssh/id_rsa";
       signByDefault = true;

@@ -1,7 +1,26 @@
 { config, pkgs, ... }:
 
 let
-  focusapp = pkgs.writeShellScriptBin "focusapp" (builtins.readFile ./sh/focusapp.sh);
+  # The AeroSpace GUI launches with a minimal PATH (/usr/bin:/bin:/usr/sbin:/sbin),
+  # so exec-and-forget can't resolve binaries from the nix profile. Bake absolute
+  # store paths into the script (for the internal `aerospace` CLI call) and into the
+  # bindings (for `focusapp` itself) so they work regardless of PATH.
+  aerospace = config.programs.aerospace.package;
+  focusapp = pkgs.writeShellScriptBin "focusapp" (
+    builtins.replaceStrings [ "@aerospace@" ] [ "${aerospace}/bin/aerospace" ] (
+      builtins.readFile ./sh/focusapp.sh
+    )
+  );
+
+  # Aerospace Modifier
+  hyper = "cmd-alt-ctrl";
+
+  floatingAppIds = [
+    "com.postmanlabs.mac"
+    "com.apple.finder"
+    "com.spotify.client"
+    "com.usebruno.app"
+  ];
 in
 {
   home.packages = [
@@ -32,77 +51,76 @@ in
       outer.right = 10;
     };
     mode.main.binding = {
-      cmd-alt-ctrl-period = "layout tiles horizontal vertical";
-      cmd-alt-ctrl-comma = "layout accordion horizontal vertical";
-      cmd-alt-ctrl-h = "focus left";
-      cmd-alt-ctrl-j = "focus down";
-      cmd-alt-ctrl-k = "focus up";
-      cmd-alt-ctrl-l = "focus right";
-      cmd-alt-ctrl-shift-h = "move left";
-      cmd-alt-ctrl-shift-j = "move down";
-      cmd-alt-ctrl-shift-k = "move up";
-      cmd-alt-ctrl-shift-l = "move right";
-      cmd-alt-ctrl-slash = "resize smart -50";
-      cmd-alt-ctrl-rightSquareBracket = "resize smart +50";
-      cmd-alt-ctrl-m = "fullscreen --no-outer-gaps";
-      cmd-alt-ctrl-shift-m = "macos-native-fullscreen";
-      cmd-alt-ctrl-f = "layout floating tiling";
-      cmd-alt-ctrl-1 = "workspace 1";
-      cmd-alt-ctrl-2 = "workspace 2";
-      cmd-alt-ctrl-3 = "workspace 3";
-      cmd-alt-ctrl-4 = "workspace 4";
-      cmd-alt-ctrl-5 = "workspace 5";
-      cmd-alt-ctrl-6 = "workspace 6";
-      cmd-alt-ctrl-7 = "workspace 7";
-      cmd-alt-ctrl-8 = "workspace 8";
-      cmd-alt-ctrl-9 = "workspace 9";
-      cmd-alt-ctrl-shift-1 = "move-node-to-workspace 1";
-      cmd-alt-ctrl-shift-2 = "move-node-to-workspace 2";
-      cmd-alt-ctrl-shift-3 = "move-node-to-workspace 3";
-      cmd-alt-ctrl-shift-4 = "move-node-to-workspace 4";
-      cmd-alt-ctrl-shift-5 = "move-node-to-workspace 5";
-      cmd-alt-ctrl-shift-6 = "move-node-to-workspace 6";
-      cmd-alt-ctrl-shift-7 = "move-node-to-workspace 7";
-      cmd-alt-ctrl-shift-8 = "move-node-to-workspace 8";
-      cmd-alt-ctrl-shift-9 = "move-node-to-workspace 9";
-      cmd-alt-ctrl-tab = "focus-back-and-forth";
-      cmd-alt-ctrl-shift-tab = "move-workspace-to-monitor --wrap-around next";
-      cmd-alt-ctrl-a = "mode apps";
-      cmd-alt-ctrl-s = "mode service";
+      "${hyper}-period" = "layout tiles horizontal vertical";
+      "${hyper}-comma" = "layout accordion horizontal vertical";
+      "${hyper}-h" = "focus left";
+      "${hyper}-j" = "focus down";
+      "${hyper}-k" = "focus up";
+      "${hyper}-l" = "focus right";
+      "${hyper}-shift-h" = "move left";
+      "${hyper}-shift-j" = "move down";
+      "${hyper}-shift-k" = "move up";
+      "${hyper}-shift-l" = "move right";
+      "${hyper}-slash" = "resize smart -50";
+      "${hyper}-rightSquareBracket" = "resize smart +50";
+      "${hyper}-m" = "fullscreen --no-outer-gaps";
+      "${hyper}-shift-m" = "macos-native-fullscreen";
+      "${hyper}-f" = "layout floating tiling";
+      "${hyper}-1" = "workspace 1";
+      "${hyper}-2" = "workspace 2";
+      "${hyper}-3" = "workspace 3";
+      "${hyper}-4" = "workspace 4";
+      "${hyper}-5" = "workspace 5";
+      "${hyper}-6" = "workspace 6";
+      "${hyper}-7" = "workspace 7";
+      "${hyper}-8" = "workspace 8";
+      "${hyper}-9" = "workspace 9";
+      "${hyper}-shift-1" = "move-node-to-workspace 1";
+      "${hyper}-shift-2" = "move-node-to-workspace 2";
+      "${hyper}-shift-3" = "move-node-to-workspace 3";
+      "${hyper}-shift-4" = "move-node-to-workspace 4";
+      "${hyper}-shift-5" = "move-node-to-workspace 5";
+      "${hyper}-shift-6" = "move-node-to-workspace 6";
+      "${hyper}-shift-7" = "move-node-to-workspace 7";
+      "${hyper}-shift-8" = "move-node-to-workspace 8";
+      "${hyper}-shift-9" = "move-node-to-workspace 9";
+      "${hyper}-tab" = "focus-back-and-forth";
+      "${hyper}-shift-tab" = "move-workspace-to-monitor --wrap-around next";
+      "${hyper}-a" = "mode apps";
+      "${hyper}-s" = "mode service";
     };
-    # TODO: for some reason this entire mode is not working correctly
     mode.apps.binding = {
       esc = "mode main";
-      cmd-alt-ctrl-b = [
-        ''exec-and-forget focusapp "Firefox Developer Edition"''
+      "${hyper}-b" = [
+        ''exec-and-forget ${focusapp}/bin/focusapp "Firefox Developer Edition"''
         "mode main"
       ];
-      cmd-alt-ctrl-c = [
+      "${hyper}-c" = [
         ''exec-and-forget open "/Applications/Google Chrome.app"''
         "mode main"
       ];
-      cmd-alt-ctrl-t = [
-        "exec-and-forget focusapp kitty"
+      "${hyper}-t" = [
+        "exec-and-forget ${focusapp}/bin/focusapp kitty"
         "mode main"
       ];
-      cmd-alt-ctrl-a = [
-        ''exec-and-forget focusapp "Android Studio"''
+      "${hyper}-a" = [
+        ''exec-and-forget ${focusapp}/bin/focusapp "Android Studio"''
         "mode main"
       ];
-      cmd-alt-ctrl-i = [
-        ''exec-and-forget focusapp "IntelliJ IDEA"''
+      "${hyper}-i" = [
+        ''exec-and-forget ${focusapp}/bin/focusapp "IntelliJ IDEA"''
         "mode main"
       ];
-      cmd-alt-ctrl-m = [
+      "${hyper}-m" = [
         ''exec-and-forget open "/Applications/Thunderbird.app"''
         "mode main"
       ];
-      cmd-alt-ctrl-f = [
-        ''exec-and-forget focusapp "Finder"''
+      "${hyper}-f" = [
+        ''exec-and-forget ${focusapp}/bin/focusapp "Finder"''
         "mode main"
       ];
-      cmd-alt-ctrl-p = [
-        ''exec-and-forget focusapp "Postman"''
+      "${hyper}-p" = [
+        ''exec-and-forget ${focusapp}/bin/focusapp "Postman"''
         "mode main"
       ];
     };
@@ -111,46 +129,36 @@ in
         "reload-config"
         "mode main"
       ];
-      cmd-alt-ctrl-r = [
+      "${hyper}-r" = [
         "flatten-workspace-tree"
         "mode main"
       ];
-      cmd-alt-ctrl-b = [
+      "${hyper}-b" = [
         "balance-sizes"
         "mode main"
       ];
-      cmd-alt-ctrl-h = [
+      "${hyper}-h" = [
         "join-with left"
         "mode main"
       ];
 
-      cmd-alt-ctrl-j = [
+      "${hyper}-j" = [
         "join-with down"
         "mode main"
       ];
-      cmd-alt-ctrl-k = [
+      "${hyper}-k" = [
         "join-with up"
         "mode main"
       ];
-      cmd-alt-ctrl-l = [
+      "${hyper}-l" = [
         "join-with right"
         "mode main"
       ];
     };
-    on-window-detected = [
-      {
-        "if".app-id = "com.postmanlabs.mac";
-        run = "layout floating";
-      }
-      {
-        "if".app-id = "com.apple.finder";
-        run = "layout floating";
-      }
-      {
-        "if".app-id = " com.spotify.client";
-        run = "layout floating";
-      }
-    ];
+    on-window-detected = map (id: {
+      "if".app-id = id;
+      run = "layout floating";
+    }) floatingAppIds;
     workspace-to-monitor-force-assignment = {
       "2" = [
         "secondary"

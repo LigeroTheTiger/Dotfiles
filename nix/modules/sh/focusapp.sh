@@ -14,7 +14,7 @@ if [[ -z "$app_path" ]]; then
 fi
 
 # Look for a matching window in the focused workspace
-id=$(aerospace list-windows --workspace focused | awk -F '|' -v name="${app_name%.app}" '
+id=$(@aerospace@ list-windows --workspace focused | awk -F '|' -v name="${app_name%.app}" '
   $2 ~ name {
     gsub(/ /, "", $1);
     print $1;
@@ -22,7 +22,7 @@ id=$(aerospace list-windows --workspace focused | awk -F '|' -v name="${app_name
   }')
 
 if [[ -n "$id" ]]; then
-  aerospace focus --window-id "$id"
+  @aerospace@ focus --window-id "$id"
 else
   open -n "$app_path"
 fi 

@@ -7,6 +7,8 @@ let
     rev = "969e363295b48f62fdcbf29987c77ac222109c41";
     hash = "sha256-DamZpYkyVjxRKNtW5LTLX1OU47xgd/ayiimDorVSamE=";
   };
+  # cant be the kitty_mod defined in the conf, as that can only have modifier keys
+  kitty_mod = "ctrl+a";
 in
 {
 
@@ -35,21 +37,21 @@ in
     };
 
     keybindings = {
-      "ctrl+a>x" = "close_window";
-      "ctrl+a>]" = "next_window";
-      "ctrl+a>[" = "previous_window";
-      "ctrl+a>c" = "launch_tab";
-      "ctrl+a>," = "set_tab_title";
+      "${kitty_mod}>x" = "close_window";
+      "${kitty_mod}>]" = "next_window";
+      "${kitty_mod}>[" = "previous_window";
+      "${kitty_mod}>c" = "launch_tab";
+      "${kitty_mod}>," = "set_tab_title";
       "ctrl+plus" = "change_font_size all +2.0";
       "ctrl+kp_add" = "change_font_size all +2.0";
       "ctrl+minus" = "change_font_size all -2.0";
       "ctrl+kp_subtract" = "change_font_size all -2.0";
       "ctrl+0" = "change_font_size all 0";
-      "ctrl+a>shift+e" = "edit_config";
-      "ctrl+a>shift+r" = "reload_config";
-      "ctrl+a>shift+d" = "debug_config";
-      "ctrl+a>." = "launch_v_split";
-      "ctrl+a>-" = "launch_h_split";
+      "${kitty_mod}>shift+e" = "edit_config";
+      "${kitty_mod}>shift+r" = "reload_config";
+      "${kitty_mod}>shift+d" = "debug_config";
+      "${kitty_mod}>." = "launch_v_split";
+      "${kitty_mod}>-" = "launch_h_split";
       "ctrl+z" = "resize_window narrower";
       "ctrl+o" = "resize_window wider";
       "ctrl+u" = "resize_window taller";
@@ -58,9 +60,9 @@ in
       "ctrl+l" = "neighboring_window right";
       "ctrl+j" = "neighboring_window down";
       "ctrl+k" = "neighboring_window up";
-      "ctrl+a>q" = "close_window";
-      "ctrl+a>s" = "kitten kitty_grab/grab.py";
-      "ctrl+a>m" = "toggle_layout stack";
+      "${kitty_mod}>q" = "close_window";
+      "${kitty_mod}>s" = "kitten kitty_grab/grab.py";
+      "${kitty_mod}>m" = "toggle_layout stack";
     };
 
     settings = {

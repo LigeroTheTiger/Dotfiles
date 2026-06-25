@@ -43,6 +43,7 @@
           pkgs.discord
           pkgs.spotify
           pkgs.postman
+          pkgs.bruno
           pkgs.betterdisplay
           pkgs.android-tools
           pkgs.docker
@@ -73,6 +74,8 @@
         homebrew.masApps = {
           Wireguard = 1451685025;
         };
+
+        homebrew.onActivation.cleanup = "zap";
 
         users.users.ligero.home = "/var/empty";
         home-manager.useGlobalPkgs = true;
