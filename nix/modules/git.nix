@@ -5,7 +5,7 @@
     enable = true;
     settings = {
       user.name = "LigeroTheTiger";
-      user.email = "42996211+LigeroTheTiger@users.noreply.github.com";
+      user.email = "ligero@ligerothetiger.com";
       color.ui = "auto";
       core.autocrlf = "input";
       gpg.format = "ssh";
